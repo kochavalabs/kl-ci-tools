@@ -45,7 +45,6 @@
   "dependencies": {
     "commander": "^5.1.0",
     "debug": "^4.1.1",
-    "semver": "^7.3.2",
-    "sever": "develop"
+    "semver": "^7.3.2"
   }
 }
