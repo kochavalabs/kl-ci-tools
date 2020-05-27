@@ -23,6 +23,30 @@ validateCmd.action(async function () {
   })
 })
 
+const tagCmd = program.command('tag <val>')
+const tagDesc = `
+Appends text to the end of a package version in the package.json
+
+Examples:
+  kl-cli-tools tag 'add-to-version'
+ `
+
+tagCmd.description(tagDesc)
+tagCmd.action(async function (toAppend) {
+  fs.readFile('package.json', function (err, contents) {
+    if (err) {
+      return console.error(err)
+    }
+    const pJSON = JSON.parse(contents)
+    pJSON['version'] = pJSON['version'] + '-' + toAppend
+    fs.writeFile('package.json', JSON.stringify(pJSON, null, 2), function (err) {
+      if (err !== null) {
+        throw err
+      }
+    })
+  })
+})
+
 program.on('command:*', function (command) {
   program.help()
 })
