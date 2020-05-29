@@ -50,7 +50,7 @@ jobs:
           command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
       - run:
           name: Publish package
-          command: npm publish --tag develop
+          command: npm publish --tag latest
 
 workflows:
   version: 2

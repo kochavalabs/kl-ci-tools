@@ -1,6 +1,6 @@
 import program from 'commander'
 import fs from 'fs'
-import { ValidatePackage } from './validate/package.js'
+import { NonSemverDeps, ValidatePackage } from './validate/package.js'
 
 const validateCmd = program.command('validate')
 const validateDesc = `
@@ -14,7 +14,7 @@ validateCmd.description(validateDesc)
 validateCmd.action(async function () {
   fs.readFile('package.json', function (err, contents) {
     if (err) {
-      return console.error(err)
+      throw err
     }
     const pJSON = JSON.parse(contents)
     if (!ValidatePackage(pJSON)) {
@@ -35,7 +35,7 @@ tagCmd.description(tagDesc)
 tagCmd.action(async function (toAppend) {
   fs.readFile('package.json', function (err, contents) {
     if (err) {
-      return console.error(err)
+      throw err
     }
     const pJSON = JSON.parse(contents)
     pJSON['version'] = pJSON['version'] + '-' + toAppend
@@ -44,6 +44,27 @@ tagCmd.action(async function (toAppend) {
         throw err
       }
     })
+  })
+})
+
+const depCmd = program.command('deps')
+const depDesc = `
+Returns a list of non-semvar dependencies.
+
+Examples:
+  kl-cli-tools deps
+ `
+
+depCmd.description(depDesc)
+depCmd.action(async function (toAppend) {
+  fs.readFile('package.json', function (err, contents) {
+    if (err) {
+      throw err
+    }
+    const pJSON = JSON.parse(contents)
+    for (const dKey in NonSemverDeps(pJSON)) {
+      console.log(dKey)
+    }
   })
 })
 
